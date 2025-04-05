@@ -15,8 +15,8 @@ go.work
 
 # NestJS 관련
 # compiled output
-/dist
-/node_modules
+**/dist
+**/node_modules
 
 # Logs
 logs
@@ -35,14 +35,14 @@ lerna-debug.log*
 /.nyc_output
 
 # IDEs and editors
-/.idea
+**/.idea
 .project
 .classpath
 .c9/
 *.launch
 .settings/
 *.sublime-workspace
-.vscode/*
+**/.vscode/*
 
 # Environment
 .env
@@ -76,10 +76,6 @@ lerna-debug.log*
 
 # Yarn Integrity file
 .yarn-integrity
-
-# ide
-.idea
-.vscode
 
 # docker
 postgres_data
