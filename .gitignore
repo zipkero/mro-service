@@ -76,3 +76,11 @@ lerna-debug.log*
 
 # Yarn Integrity file
 .yarn-integrity
+
+# ide
+.idea
+.vscode
+
+# docker
+postgres_data
+rabbitmq_data
