@@ -12,8 +12,8 @@ import {
   CreateUserDto,
   CreateUserResponseDto,
   GetUserDto,
-  GetUserRequestDto,
-  GetUserResponseDto,
+  GetUsersRequestDto,
+  GetUsersResponseDto,
   LoginUserDto,
   LoginUserResponseDto,
   UpdateUserDto,
@@ -32,8 +32,8 @@ export class UserController {
 
   @Get()
   async getAllUsers(
-    @Body() getUserRequestDto: GetUserRequestDto,
-  ): Promise<GetUserResponseDto> {
+    @Body() getUserRequestDto: GetUsersRequestDto,
+  ): Promise<GetUsersResponseDto> {
     return await this.userService.getAllUsers(getUserRequestDto);
   }
 
@@ -51,6 +51,7 @@ export class UserController {
   async logout(): Promise<void> {
     return await this.userService.logout();
   }
+
   @Get('/refresh')
   async refresh(): Promise<LoginUserResponseDto> {
     return await this.userService.refresh();

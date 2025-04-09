@@ -24,8 +24,8 @@ export class TokenService {
       'JWT_REFRESH_EXPIRATION_TIME',
     );
 
-    var jwtPayload: JwtPayload = {
-      sub: tokenPayload.userId,
+    const jwtPayload: JwtPayload = {
+      sub: tokenPayload.id,
       email: tokenPayload.email,
       role: tokenPayload.role,
     };
@@ -63,7 +63,7 @@ export class TokenService {
   async refreshToken(token: string): Promise<JwtToken> {
     const payload = await this.verifyToken(token, 'refresh');
     const newAccessToken = await this.generateToken({
-      userId: payload.sub,
+      id: payload.sub,
       email: payload.email,
       role: payload.role,
     });

@@ -1,25 +1,52 @@
-import { PrismaClient, User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
+import { GetUserRequestDto, GetUsersRequestDto } from './user.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 export class UserRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async findAllUsers(): Promise<User[]> {
-    return await this.prisma.user.findMany();
-  }
+  async findAllUsers(getUserRequestDto: GetUsersRequestDto): Promise<User[]> {
+    const { page, pageSize, name, email, role } = getUserRequestDto;
+    const skip = (page - 1) * pageSize;
 
-  async findUserById(id: string): Promise<User | null> {
-    return await this.prisma.user.findUnique({
-      where: { id },
+    return await this.prisma.user.findMany({
+      skip,
+      take: pageSize,
+      orderBy: { createdAt: 'desc' },
+      where: {
+        OR: [
+          name
+            ? {
+                name: { contains: getUserRequestDto.name, mode: 'insensitive' },
+              }
+            : {},
+          email
+            ? {
+                email: {
+                  contains: getUserRequestDto.email,
+                  mode: 'insensitive',
+                },
+              }
+            : {},
+          role ? { role: getUserRequestDto.role } : {},
+        ],
+      },
     });
   }
 
-  async createUser(data: User): Promise<User> {
+  async findUser(where: GetUserRequestDto): Promise<User | null> {
+    return await this.prisma.user.findFirst({
+      where,
+    });
+  }
+
+  async createUser(data: Prisma.UserCreateInput): Promise<User> {
     return await this.prisma.user.create({
       data,
     });
   }
 
-  async updateUser(id: string, data: Partial<User>): Promise<User> {
+  async updateUser(id: string, data: Prisma.UserUpdateInput): Promise<User> {
     return await this.prisma.user.update({
       where: { id },
       data,

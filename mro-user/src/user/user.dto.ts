@@ -8,8 +8,8 @@ import {
 import { JwtToken } from 'src/token/token.type';
 
 export enum UserRole {
-  admin = 'admin',
-  user = 'user',
+  ADMIN = 'ADMIN',
+  USER = 'USER',
 }
 
 export class UserDto {
@@ -46,13 +46,21 @@ export type LoginUserResponseDto = JwtToken;
 
 export type GetUserDto = Pick<UserDto, 'id' | 'email' | 'name' | 'role'>;
 
-export type GetUserRequestDto = {
+export type GetUserRequestDto =
+  | { email: string }
+  | { id: string }
+  | { password: string };
+
+export type GetUsersRequestDto = {
+  name?: string;
+  email?: string;
+  role?: UserRole;
   page: number;
   pageSize: number;
 };
 
-export type GetUserResponseDto = Pick<
-  GetUserRequestDto,
+export type GetUsersResponseDto = Pick<
+  GetUsersRequestDto,
   'page' | 'pageSize'
 > & {
   total: number;

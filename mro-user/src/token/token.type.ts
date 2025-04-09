@@ -1,4 +1,4 @@
-import { UserRole } from 'src/user/user.dto';
+import { UserRole } from '../user/user.dto';
 
 export type TokenType = 'access' | 'refresh';
 
@@ -8,7 +8,7 @@ export type JwtToken = {
 };
 
 export type TokenPayload = {
-  userId: string;
+  id: string;
   email: string;
   role: UserRole;
 };
