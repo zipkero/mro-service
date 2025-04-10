@@ -1,4 +1,5 @@
 import { UserRole } from '../common/enums/UserRole';
+import { User } from '@prisma/client';
 
 export type GetUserQuery =
   | { email: string }
@@ -11,4 +12,9 @@ export type GetUsersQuery = {
   role?: UserRole;
   page: number;
   pageSize: number;
+};
+
+export type GetUsersQueryResult = GetUsersQuery & {
+  total: number;
+  users: User[];
 };

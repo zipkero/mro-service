@@ -62,11 +62,10 @@ export class TokenService {
 
   async refreshToken(token: string): Promise<JwtToken> {
     const payload = await this.verifyToken(token, 'refresh');
-    const newAccessToken = await this.generateToken({
+    return await this.generateToken({
       id: payload.sub,
       email: payload.email,
       role: payload.role,
     });
-    return newAccessToken;
   }
 }

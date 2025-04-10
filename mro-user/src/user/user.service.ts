@@ -16,6 +16,7 @@ import {
 } from './user.dto';
 import bcrypt from 'bcryptjs';
 import { UserRepository } from './user.repository';
+import { UserMapper } from './user.mapper';
 
 @Injectable()
 export class UserService {
@@ -34,17 +35,21 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
-    this.tokenService.generateToken({
+    return await this.tokenService.generateToken({
       email: user.email,
       id: user.id,
-      role: user.role,
+      role: UserMapper.toRole(user.role),
     });
   }
 
   async getAllUsers(
     getUserRequestDto: GetUsersRequestDto,
   ): Promise<GetUsersResponseDto> {
-    throw new Error('Method not implemented.');
+    const queryResult = await this.userRepo.findAllUsers(getUserRequestDto);
+    return {
+      ...queryResult,
+      users: UserMapper.toGetUsersDto(queryResult.users),
+    };
   }
 
   async getMe(): Promise<GetUserDto> {
@@ -52,16 +57,22 @@ export class UserService {
   }
 
   async getUserById(id: string): Promise<GetUserDto> {
-    throw new Error('Method not implemented.');
+    const user = await this.userRepo.findUser({ id });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return UserMapper.toGetUserDto(user);
   }
 
   async getUserByEmail(email: string): Promise<GetUserDto> {
-    throw new Error('Method not implemented.');
+    const user = await this.userRepo.findUser({ email });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return UserMapper.toGetUserDto(user);
   }
 
-  async logout(): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
+  async logout(): Promise<void> {}
 
   async refresh(): Promise<LoginUserResponseDto> {
     throw new Error('Method not implemented.');
@@ -91,11 +102,11 @@ export class UserService {
     id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<GetUserDto> {
-    const updateUser = await this.userRepo.updateUser(id, updateUserDto);
-    return null;
+    const user = await this.userRepo.updateUser(id, updateUserDto);
+    return UserMapper.toGetUserDto(user);
   }
 
   async deleteUser(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+    await this.userRepo.deleteUser(id);
   }
 }

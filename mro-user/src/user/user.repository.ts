@@ -1,37 +1,53 @@
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { GetUserQuery, GetUsersQuery } from './user.query';
+import { GetUserQuery, GetUsersQuery, GetUsersQueryResult } from './user.query';
 
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllUsers(getUsersQuery: GetUsersQuery): Promise<User[]> {
+  async findAllUsers(
+    getUsersQuery: GetUsersQuery,
+  ): Promise<GetUsersQueryResult> {
     const { page, pageSize, name, email, role } = getUsersQuery;
     const skip = (page - 1) * pageSize;
 
-    return await this.prisma.user.findMany({
-      skip,
-      take: pageSize,
-      orderBy: { createdAt: 'desc' },
-      where: {
-        OR: [
-          name
-            ? {
-                name: { contains: getUsersQuery.name, mode: 'insensitive' },
-              }
-            : {},
-          email
-            ? {
-                email: {
-                  contains: getUsersQuery.email,
-                  mode: 'insensitive',
-                },
-              }
-            : {},
-          role ? { role: getUsersQuery.role } : {},
-        ],
-      },
-    });
+    const where: Prisma.UserWhereInput = {
+      OR: [
+        name
+          ? {
+              name: {
+                contains: getUsersQuery.name,
+                mode: Prisma.QueryMode.insensitive,
+              },
+            }
+          : {},
+        email
+          ? {
+              email: {
+                contains: getUsersQuery.email,
+                mode: Prisma.QueryMode.insensitive,
+              },
+            }
+          : {},
+        role ? { role: getUsersQuery.role } : {},
+      ].filter((condition) => Object.keys(condition).length > 0),
+    };
+
+    const [users, total] = await Promise.all([
+      this.prisma.user.findMany({
+        skip,
+        take: pageSize,
+        orderBy: { createdAt: 'desc' },
+        where: where,
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+
+    return {
+      ...getUsersQuery,
+      total,
+      users,
+    };
   }
 
   async findUser(where: GetUserQuery): Promise<User | null> {
