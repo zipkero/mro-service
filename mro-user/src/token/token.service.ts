@@ -55,8 +55,8 @@ export class TokenService {
       return await this.jwtService.verifyAsync<JwtPayload>(token, {
         secret: secretKey,
       });
-    } catch (error) {
-      throw new Error('Token verification failed');
+    } catch (e) {
+      throw new Error('Token verification failed: ', e);
     }
   }
 

@@ -6,11 +6,7 @@ import {
   IsString,
 } from 'class-validator';
 import { JwtToken } from 'src/token/token.type';
-
-export enum UserRole {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
-}
+import { UserRole } from '../common/enums/UserRole';
 
 export class UserDto {
   id: string;
@@ -45,11 +41,6 @@ export type LoginUserDto = Pick<UserDto, 'email' | 'password'>;
 export type LoginUserResponseDto = JwtToken;
 
 export type GetUserDto = Pick<UserDto, 'id' | 'email' | 'name' | 'role'>;
-
-export type GetUserRequestDto =
-  | { email: string }
-  | { id: string }
-  | { password: string };
 
 export type GetUsersRequestDto = {
   name?: string;

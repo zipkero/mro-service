@@ -1,12 +1,12 @@
 import { Prisma, User } from '@prisma/client';
-import { GetUserRequestDto, GetUsersRequestDto } from './user.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { GetUserQuery, GetUsersQuery } from './user.query';
 
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllUsers(getUserRequestDto: GetUsersRequestDto): Promise<User[]> {
-    const { page, pageSize, name, email, role } = getUserRequestDto;
+  async findAllUsers(getUsersQuery: GetUsersQuery): Promise<User[]> {
+    const { page, pageSize, name, email, role } = getUsersQuery;
     const skip = (page - 1) * pageSize;
 
     return await this.prisma.user.findMany({
@@ -17,24 +17,24 @@ export class UserRepository {
         OR: [
           name
             ? {
-                name: { contains: getUserRequestDto.name, mode: 'insensitive' },
+                name: { contains: getUsersQuery.name, mode: 'insensitive' },
               }
             : {},
           email
             ? {
                 email: {
-                  contains: getUserRequestDto.email,
+                  contains: getUsersQuery.email,
                   mode: 'insensitive',
                 },
               }
             : {},
-          role ? { role: getUserRequestDto.role } : {},
+          role ? { role: getUsersQuery.role } : {},
         ],
       },
     });
   }
 
-  async findUser(where: GetUserRequestDto): Promise<User | null> {
+  async findUser(where: GetUserQuery): Promise<User | null> {
     return await this.prisma.user.findFirst({
       where,
     });
