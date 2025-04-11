@@ -13,7 +13,9 @@ export class UserMapper {
 
   static toGetUserDto = (user: User): GetUserDto => {
     return {
-      ...user,
+      id: user.id,
+      email: user.email,
+      name: user.name,
       role: UserMapper.toRole(user.role),
     };
   };

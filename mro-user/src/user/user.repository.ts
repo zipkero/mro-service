@@ -13,8 +13,9 @@ export class UserRepository {
     const { page, pageSize, name, email, role } = getUsersQuery;
     const skip = (page - 1) * pageSize;
 
-    const where: Prisma.UserWhereInput = {
-      OR: [
+    const where: Prisma.UserWhereInput = {};
+    if (name || email || role) {
+      where.OR = [
         name
           ? {
               name: {
@@ -32,8 +33,8 @@ export class UserRepository {
             }
           : {},
         role ? { role: getUsersQuery.role } : {},
-      ].filter((condition) => Object.keys(condition).length > 0),
-    };
+      ];
+    }
 
     const [users, total] = await Promise.all([
       this.prisma.user.findMany({
