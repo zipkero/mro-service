@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { PrismaModule } from './prisma/prisma.module';
       envFilePath: '.env',
     }),
     UserModule,
+    RedisModule,
   ],
   controllers: [],
   providers: [],

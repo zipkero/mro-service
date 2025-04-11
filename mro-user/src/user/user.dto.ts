@@ -36,9 +36,15 @@ export type CreateUserResponseDto = Pick<UserDto, 'email' | 'name'>;
 
 export type UpdateUserDto = Partial<UserDto>;
 
+export type UpdateUserResponseDto = CreateUserResponseDto;
+
 export type LoginUserDto = Pick<UserDto, 'email' | 'password'>;
 
 export type LoginUserResponseDto = JwtToken;
+
+export type LogoutUserRequestDto = {
+  accessToken: string;
+};
 
 export type GetUserDto = Pick<UserDto, 'id' | 'email' | 'name' | 'role'>;
 

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   Param,
   Patch,
   Post,
@@ -17,6 +18,7 @@ import {
   LoginUserDto,
   LoginUserResponseDto,
   UpdateUserDto,
+  UpdateUserResponseDto,
 } from './user.dto';
 
 @Controller('user')
@@ -28,6 +30,15 @@ export class UserController {
     @Body() userLoginDto: LoginUserDto,
   ): Promise<LoginUserResponseDto> {
     return await this.userService.login(userLoginDto);
+  }
+
+  @Post('/logout')
+  async logout(@Headers('authorization') authHeader: string): Promise<void> {
+    const accessToken = authHeader.split(' ')[1];
+    if (!accessToken) {
+      throw new Error('AccessToken not provided');
+    }
+    return await this.userService.logout(accessToken);
   }
 
   @Get()
@@ -47,11 +58,6 @@ export class UserController {
     return await this.userService.getUserById(id);
   }
 
-  @Get('/logout')
-  async logout(): Promise<void> {
-    return await this.userService.logout();
-  }
-
   @Get('/refresh')
   async refresh(): Promise<LoginUserResponseDto> {
     return await this.userService.refresh();
@@ -68,7 +74,7 @@ export class UserController {
   async updateUser(
     @Param('id') id: string,
     @Body() udateUserDto: UpdateUserDto,
-  ): Promise<LoginUserResponseDto> {
+  ): Promise<UpdateUserResponseDto> {
     return await this.userService.updateUser(id, udateUserDto);
   }
 

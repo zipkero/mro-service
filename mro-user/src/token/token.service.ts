@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { JwtPayload, JwtToken, TokenPayload, TokenType } from './token.type';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class TokenService {
   constructor(
     private readonly jwtService: JwtService,
+    private readonly redisService: RedisService,
     private readonly configService: ConfigService,
   ) {}
 
@@ -14,13 +16,13 @@ export class TokenService {
     const accessSecretKey = this.configService.get<string>(
       'JWT_ACCESS_SECRET_KEY',
     );
-    const accessExpirationTime = this.configService.get<string>(
+    const accessExpirationTime = this.configService.get<number>(
       'JWT_ACCESS_EXPIRATION_TIME',
     );
     const refreshSecretKey = this.configService.get<string>(
       'JWT_REFRESH_SECRET_KEY',
     );
-    const refreshExpirationTime = this.configService.get<string>(
+    const refreshExpirationTime = this.configService.get<number>(
       'JWT_REFRESH_EXPIRATION_TIME',
     );
 
@@ -32,13 +34,31 @@ export class TokenService {
 
     const accessToken = await this.jwtService.signAsync(jwtPayload, {
       secret: accessSecretKey,
-      expiresIn: accessExpirationTime,
+      expiresIn: Number(accessExpirationTime),
     });
 
     const refreshToken = await this.jwtService.signAsync(jwtPayload, {
       secret: refreshSecretKey,
-      expiresIn: refreshExpirationTime,
+      expiresIn: Number(refreshExpirationTime),
     });
+
+    const redisClient = this.redisService.getClient();
+
+    const accessRedisKey = `access:${tokenPayload.id}`;
+    const refreshRedisKey = `refresh:${tokenPayload.id}`;
+
+    await Promise.all([
+      redisClient.setex(
+        accessRedisKey,
+        Number(accessExpirationTime),
+        accessToken,
+      ),
+      redisClient.setex(
+        refreshRedisKey,
+        Number(refreshExpirationTime),
+        refreshToken,
+      ),
+    ]);
 
     return {
       accessToken,
@@ -52,16 +72,42 @@ export class TokenService {
         ? this.configService.get<string>('JWT_ACCESS_SECRET_KEY')
         : this.configService.get<string>('JWT_REFRESH_SECRET_KEY');
     try {
-      return await this.jwtService.verifyAsync<JwtPayload>(token, {
+      const jwtPayload = await this.jwtService.verifyAsync<JwtPayload>(token, {
         secret: secretKey,
       });
+
+      const redisClient = this.redisService.getClient();
+      const redisKey = `${tokenType}:${jwtPayload.sub}`;
+      const redisToken = await redisClient.get(redisKey);
+      if (!redisToken) {
+        throw new Error('Token not found in Redis');
+      }
+      if (redisToken !== token) {
+        throw new Error('Token mismatch with Redis');
+      }
+
+      return jwtPayload;
     } catch (e) {
       throw new Error('Token verification failed: ', e);
     }
   }
 
+  async removeTokens(sub: string): Promise<void> {
+    const redisClient = this.redisService.getClient();
+    const accessRedisKey = `access:${sub}`;
+    const refreshRedisKey = `refresh:${sub}`;
+
+    await Promise.all([
+      redisClient.del(accessRedisKey),
+      redisClient.del(refreshRedisKey),
+    ]);
+  }
+
   async refreshToken(token: string): Promise<JwtToken> {
     const payload = await this.verifyToken(token, 'refresh');
+
+    await this.removeTokens(payload.sub);
+
     return await this.generateToken({
       id: payload.sub,
       email: payload.email,
