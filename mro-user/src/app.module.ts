@@ -4,13 +4,14 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
 import { AuthModule } from './auth/auth.module';
+import * as process from 'node:process';
 
 @Module({
   imports: [
     PrismaModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: `.env${process.env.NODE_ENV == 'production' ? '.prod' : '.development'}`,
     }),
     UserModule,
     RedisModule,
