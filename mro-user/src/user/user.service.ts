@@ -10,8 +10,6 @@ import {
   GetUserDto,
   GetUsersRequestDto,
   GetUsersResponseDto,
-  LoginUserDto,
-  LoginUserResponseDto,
   UpdateUserDto,
 } from './user.dto';
 import * as bcrypt from 'bcryptjs';
@@ -25,41 +23,6 @@ export class UserService {
     private readonly userRepo: UserRepository,
   ) {}
 
-  async login(userLoginDto: LoginUserDto): Promise<LoginUserResponseDto> {
-    const user = await this.userRepo.findUser({
-      email: userLoginDto.email,
-    });
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    if (!(await bcrypt.compare(userLoginDto.password, user.password))) {
-      throw new ConflictException('Invalid credentials');
-    }
-    const jwtToken = await this.tokenService.generateToken({
-      id: user.id,
-      email: user.email,
-      role: UserMapper.toRole(user.role),
-    });
-
-    await this.userRepo.updateUser(user.id, {
-      lastLogin: new Date(),
-    });
-
-    return jwtToken;
-  }
-
-  async logout(accessToken: string): Promise<void> {
-    const tokenPayload = await this.tokenService.verifyToken(
-      accessToken,
-      'access',
-    );
-
-    if (!tokenPayload) {
-      throw new NotFoundException('Token not found');
-    }
-    await this.tokenService.removeTokens(tokenPayload.sub);
-  }
-
   async getAllUsers(
     getUserRequestDto: GetUsersRequestDto,
   ): Promise<GetUsersResponseDto> {
@@ -68,10 +31,6 @@ export class UserService {
       ...queryResult,
       users: UserMapper.toGetUsersDto(queryResult.users),
     };
-  }
-
-  async getMe(): Promise<GetUserDto> {
-    throw new Error('Method not implemented.');
   }
 
   async getUserById(id: string): Promise<GetUserDto> {
@@ -88,10 +47,6 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
     return UserMapper.toGetUserDto(user);
-  }
-
-  async refresh(): Promise<LoginUserResponseDto> {
-    throw new Error('Method not implemented.');
   }
 
   async register(createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {

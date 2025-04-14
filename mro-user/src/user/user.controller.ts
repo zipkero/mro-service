@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Headers,
   Param,
   Patch,
   Post,
@@ -15,31 +14,13 @@ import {
   GetUserDto,
   GetUsersRequestDto,
   GetUsersResponseDto,
-  LoginUserDto,
-  LoginUserResponseDto,
   UpdateUserDto,
   UpdateUserResponseDto,
 } from './user.dto';
 
-@Controller('user')
+@Controller({ path: 'user', version: '1' })
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Post('/login')
-  async login(
-    @Body() userLoginDto: LoginUserDto,
-  ): Promise<LoginUserResponseDto> {
-    return await this.userService.login(userLoginDto);
-  }
-
-  @Post('/logout')
-  async logout(@Headers('authorization') authHeader: string): Promise<void> {
-    const accessToken = authHeader.split(' ')[1];
-    if (!accessToken) {
-      throw new Error('AccessToken not provided');
-    }
-    return await this.userService.logout(accessToken);
-  }
 
   @Get()
   async getAllUsers(
@@ -48,19 +29,9 @@ export class UserController {
     return await this.userService.getAllUsers(getUserRequestDto);
   }
 
-  @Get('/me')
-  async getMe(): Promise<GetUserDto> {
-    return await this.userService.getMe();
-  }
-
   @Get('/:id')
   async getUserById(@Param('id') id: string): Promise<GetUserDto> {
     return await this.userService.getUserById(id);
-  }
-
-  @Get('/refresh')
-  async refresh(): Promise<LoginUserResponseDto> {
-    return await this.userService.refresh();
   }
 
   @Post()
@@ -73,9 +44,9 @@ export class UserController {
   @Patch('/:id')
   async updateUser(
     @Param('id') id: string,
-    @Body() udateUserDto: UpdateUserDto,
+    @Body() updateUserDto: UpdateUserDto,
   ): Promise<UpdateUserResponseDto> {
-    return await this.userService.updateUser(id, udateUserDto);
+    return await this.userService.updateUser(id, updateUserDto);
   }
 
   @Delete('/:id')
