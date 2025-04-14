@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
 import axios from 'axios';
+import { API_BASE_URLS, API_PATHS, getApiUrl } from '../../config/config';
 
 export type User = {
   id: string;
@@ -23,7 +24,7 @@ export class AuthGuard implements CanActivate {
       return false;
     }
     const response = await axios.get<User>(
-      'http://localhost:3000/api/v1/user/verify',
+      getApiUrl(API_BASE_URLS.AUTH, API_PATHS.AUTH.VERIFY),
       {
         headers: {
           Authorization: `Bearer ${token}`,

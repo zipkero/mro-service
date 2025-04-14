@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { TokenService } from 'src/token/token.service';
 import {
   CreateUserDto,
   CreateUserResponseDto,
@@ -18,10 +17,7 @@ import { UserMapper } from './user.mapper';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly tokenService: TokenService,
-    private readonly userRepo: UserRepository,
-  ) {}
+  constructor(private readonly userRepo: UserRepository) {}
 
   async getAllUsers(
     getUserRequestDto: GetUsersRequestDto,
