@@ -3,20 +3,13 @@ import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ApiConfigService } from './config/api.config';
+import { ConfigModule } from './config/config.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: `.env${process.env.NODE_ENV == 'production' ? '.prod' : '.development'}`,
-    }),
-    UserModule,
-    ProductModule,
-    OrderModule,
-    AuthModule,
-  ],
+  imports: [ConfigModule, UserModule, ProductModule, OrderModule, AuthModule],
   controllers: [],
-  providers: [],
+  providers: [ApiConfigService],
+  exports: [ApiConfigService],
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { API_BASE_URLS, API_PATHS, getApiUrl } from '../config/config';
+import { ApiConfigService } from '../config/api.config';
 
 export interface LoginResponse {
   accessToken: string;
@@ -9,9 +9,11 @@ export interface LoginResponse {
 
 @Injectable()
 export class AuthService {
+  constructor(private readonly apiConfigService: ApiConfigService) {}
+
   async login(username: string, password: string): Promise<LoginResponse> {
     const response = await axios.post<LoginResponse>(
-      getApiUrl(API_BASE_URLS.AUTH, API_PATHS.AUTH.LOGIN),
+      this.apiConfigService.getAuthEndpoint('/login'),
       {
         username,
         password,
@@ -25,7 +27,7 @@ export class AuthService {
 
   async logout(accessToken: string): Promise<void> {
     await axios.post(
-      getApiUrl(API_BASE_URLS.AUTH, API_PATHS.AUTH.LOGOUT),
+      this.apiConfigService.getAuthEndpoint('/logout'),
       {},
       {
         headers: {

@@ -1,7 +1,7 @@
-import { CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import axios from 'axios';
-import { API_BASE_URLS, API_PATHS, getApiUrl } from '../../config/config';
+import { ApiConfigService } from '../../config/api.config';
 
 export type User = {
   id: string;
@@ -13,8 +13,9 @@ export type RequestWithUser = Request & {
   user?: User;
 };
 
+@Injectable()
 export class AuthGuard implements CanActivate {
-  constructor() {}
+  constructor(private readonly apiConfigService: ApiConfigService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<RequestWithUser>();
@@ -23,8 +24,9 @@ export class AuthGuard implements CanActivate {
     if (type !== 'Bearer' || !token) {
       return false;
     }
-    const response = await axios.get<User>(
-      getApiUrl(API_BASE_URLS.AUTH, API_PATHS.AUTH.VERIFY),
+    const response = await axios.post<User>(
+      this.apiConfigService.getAuthEndpoint('/verify'),
+      {},
       {
         headers: {
           Authorization: `Bearer ${token}`,

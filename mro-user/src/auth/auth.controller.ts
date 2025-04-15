@@ -23,7 +23,7 @@ export class AuthController {
     return await this.authService.logout(accessToken);
   }
 
-  @Post('/verify')
+  @Get('/verify')
   async verify(
     @Headers('authorization') authHeader: string,
   ): Promise<TokenPayload> {
