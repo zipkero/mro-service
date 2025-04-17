@@ -1,7 +1,12 @@
+packages:
+  - mro-api-gateway
+  - mro-user
+  - libs/mro-core
+
 onlyBuiltDependencies:
   - '@nestjs/core'
   - '@prisma/client'
   - '@prisma/engines'
-  - bcrypt
+  - '@swc/core'
   - esbuild
   - prisma

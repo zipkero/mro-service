@@ -16,7 +16,7 @@ import {
   GetUsersResponseDto,
   UpdateUserDto,
   UpdateUserResponseDto,
-} from './user.dto';
+} from 'mro-core';
 
 @Controller({ path: 'user', version: '1' })
 export class UserController {

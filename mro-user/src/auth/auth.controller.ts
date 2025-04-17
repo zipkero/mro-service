@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginUserDto, LoginUserResponseDto } from '../user/user.dto';
-import { TokenPayload } from '../token/token.type';
+import { LoginUserDto, LoginUserResponseDto } from 'mro-core';
+import { TokenPayload } from 'mro-core';
 
 @Controller({ path: 'auth', version: '1' })
 export class AuthController {

@@ -1,7 +1,5 @@
-import { UserRole } from '../common/enums/UserRole';
 import { Role, User } from '@prisma/client';
-import { GetUserDto } from './user.dto';
-
+import { GetUserDto, UserRole } from 'mro-core';
 export class UserMapper {
   static toPrismaRole = (role: UserRole): Role => {
     return role;

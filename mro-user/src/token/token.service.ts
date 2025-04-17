@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { JwtPayload, JwtToken, TokenPayload, TokenType } from './token.type';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from 'src/redis/redis.service';
+import { TokenPayload, JwtToken, JwtPayload, TokenType } from 'mro-core';
 
 @Injectable()
 export class TokenService {

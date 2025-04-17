@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common';
 import { TokenService } from '../token/token.service';
 import { UserRepository } from '../user/user.repository';
-import { LoginUserDto, LoginUserResponseDto } from '../user/user.dto';
+import { LoginUserDto, LoginUserResponseDto } from 'mro-core';
 import * as bcrypt from 'bcryptjs';
 import { UserMapper } from '../user/user.mapper';
-import { TokenPayload } from '../token/token.type';
+import { TokenPayload } from 'mro-core';
 
 @Injectable()
 export class AuthService {

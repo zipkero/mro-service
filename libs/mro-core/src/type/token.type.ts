@@ -1,4 +1,4 @@
-import { UserRole } from '../common/enums/UserRole';
+import {UserRole} from "../enums/UserRole";
 
 export type TokenType = 'access' | 'refresh';
 

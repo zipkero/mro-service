@@ -1,0 +1,37 @@
+{
+  "monorepo": true,
+  "root": ".",
+  "projects": {
+    "mro-api-gateway": {
+      "type": "application",
+      "root": "mro-api-gateway",
+      "entryFile": "main",
+      "sourceRoot": "mro-api-gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "mro-api-gateway/tsconfig.build.json"
+      }
+    },
+    "mro-user": {
+      "type": "application",
+      "root": "mro-user",
+      "entryFile": "main",
+      "sourceRoot": "mro-user/src",
+      "compilerOptions": {
+        "tsConfigPath": "mro-user/tsconfig.build.json"
+      }
+    },
+
+    "mro-core": {
+      "type": "library",
+      "root": "libs/mro-core",
+      "entryFile": "index",
+      "sourceRoot": "libs/mro-core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/mro-core/tsconfig.lib.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "webpack": true
+  }
+}

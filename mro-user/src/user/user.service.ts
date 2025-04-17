@@ -10,7 +10,7 @@ import {
   GetUsersRequestDto,
   GetUsersResponseDto,
   UpdateUserDto,
-} from './user.dto';
+} from 'mro-core';
 import * as bcrypt from 'bcryptjs';
 import { UserRepository } from './user.repository';
 import { UserMapper } from './user.mapper';

@@ -1,4 +1,4 @@
-import { UserRole } from '../common/enums/UserRole';
+import { UserRole } from 'mro-core';
 import { User } from '@prisma/client';
 
 export type GetUserQuery =

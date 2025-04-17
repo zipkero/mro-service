@@ -5,8 +5,8 @@ import {
   IsPhoneNumber,
   IsString,
 } from 'class-validator';
-import { JwtToken } from 'src/token/token.type';
-import { UserRole } from '../common/enums/UserRole';
+import {UserRole} from "../enums/UserRole";
+import {JwtToken} from "../type/token.type";
 
 export class UserDto {
   id: string;
