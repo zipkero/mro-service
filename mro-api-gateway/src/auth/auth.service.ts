@@ -37,4 +37,30 @@ export class AuthService {
       },
     );
   }
+
+  async refreshToken(refreshToken: string): Promise<LoginResponse> {
+    const response = await axios.post<LoginResponse>(
+      this.apiConfigService.getAuthEndpoint('/refresh'),
+      {
+        refreshToken,
+      },
+      {},
+    );
+    return {
+      ...response.data,
+    };
+  }
+
+  async verifyToken(accessToken: string): Promise<void> {
+    const response = await axios.get(
+      this.apiConfigService.getAuthEndpoint('/verify'),
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    if (response.status !== 200) {
+    }
+  }
 }

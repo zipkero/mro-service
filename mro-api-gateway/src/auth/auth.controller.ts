@@ -22,4 +22,14 @@ export class AuthController {
     }
     await this.authService.logout(accessToken);
   }
+
+  @Get('/verify')
+  @UseGuards(AuthGuard)
+  async verify(@Headers('authorization') authHeader: string): Promise<void> {
+    const accessToken = authHeader.split(' ')[1];
+    if (!accessToken) {
+      throw new Error('AccessToken not provided');
+    }
+    this.authService.
+  }
 }
