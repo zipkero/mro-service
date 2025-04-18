@@ -34,8 +34,10 @@ export class AuthController {
     return await this.authService.verify(accessToken);
   }
 
-  @Get('/refresh')
-  async refresh(refreshToken: string): Promise<LoginUserResponseDto> {
+  @Post('/refresh')
+  async refresh(
+    @Body('refreshToken') refreshToken: string,
+  ): Promise<LoginUserResponseDto> {
     return await this.authService.refresh(refreshToken);
   }
 }

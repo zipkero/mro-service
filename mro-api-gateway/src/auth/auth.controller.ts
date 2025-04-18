@@ -1,6 +1,15 @@
-import { Controller, Post, UseGuards, Headers, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  Headers,
+  Body,
+  Get,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService, LoginResponse } from './auth.service';
 import { AuthGuard } from '../common/guards/auth.guard';
+import { TokenPayload } from 'mro-core';
 
 @Controller('auth')
 export class AuthController {
@@ -18,18 +27,27 @@ export class AuthController {
   async logout(@Headers('authorization') authHeader: string): Promise<void> {
     const accessToken = authHeader.split(' ')[1];
     if (!accessToken) {
-      throw new Error('AccessToken not provided');
+      throw new UnauthorizedException('AccessToken not provided');
     }
     await this.authService.logout(accessToken);
   }
 
   @Get('/verify')
   @UseGuards(AuthGuard)
-  async verify(@Headers('authorization') authHeader: string): Promise<void> {
+  async verify(
+    @Headers('authorization') authHeader: string,
+  ): Promise<TokenPayload> {
     const accessToken = authHeader.split(' ')[1];
     if (!accessToken) {
-      throw new Error('AccessToken not provided');
+      throw new UnauthorizedException('AccessToken not provided');
     }
-    this.authService.
+    return await this.authService.verifyToken(accessToken);
+  }
+
+  @Post('/refresh')
+  async refresh(
+    @Body('refreshToken') refreshToken: string,
+  ): Promise<LoginResponse> {
+    return await this.authService.refreshToken(refreshToken);
   }
 }

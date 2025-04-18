@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ApiConfigService } from '../config/api.config';
+import { TokenPayload } from 'mro-core';
 
 export interface LoginResponse {
   accessToken: string;
@@ -46,13 +47,11 @@ export class AuthService {
       },
       {},
     );
-    return {
-      ...response.data,
-    };
+    return response.data;
   }
 
-  async verifyToken(accessToken: string): Promise<void> {
-    const response = await axios.get(
+  async verifyToken(accessToken: string): Promise<TokenPayload> {
+    const response = await axios.get<TokenPayload>(
       this.apiConfigService.getAuthEndpoint('/verify'),
       {
         headers: {
@@ -60,7 +59,6 @@ export class AuthService {
         },
       },
     );
-    if (response.status !== 200) {
-    }
+    return response.data;
   }
 }
