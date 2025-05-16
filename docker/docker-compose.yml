@@ -2,6 +2,7 @@ services:
   redis:
     image: redis:7-alpine
     container_name: mro-redis
+    restart: always
     ports:
       - "6379:6379"
     volumes:
