@@ -1,7 +1,7 @@
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { GetUserQuery, GetUsersQuery, GetUsersQueryResult } from './user.query';
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserRepository {
@@ -54,6 +54,7 @@ export class UserRepository {
   }
 
   async findUser(where: GetUserQuery): Promise<User | null> {
+    throw new HttpException('Not implemented', 501);
     return await this.prisma.user.findFirst({
       where,
     });

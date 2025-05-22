@@ -7,6 +7,19 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
+interface StandardErrorResponse {
+  success: boolean;
+  error: {
+    code: number;
+    message: string;
+    path: string;
+  };
+}
+
+function isStandardErrorResponse(obj: any): obj is StandardErrorResponse {
+  return !!(obj as StandardErrorResponse);
+}
+
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
@@ -19,21 +32,34 @@ export class AllExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const message =
+    let finalErrorResponse: StandardErrorResponse;
+    const exceptionContent =
       exception instanceof HttpException
         ? exception.getResponse()
         : 'Internal Server Error';
 
-    const errorResponse = {
-      success: false,
-      error: {
-        code: status,
-        message: message,
-        path: request.url,
-      },
-    };
-    console.error(errorResponse);
+    if (isStandardErrorResponse(exceptionContent)) {
+      finalErrorResponse = {
+        success: false,
+        error: {
+          code: status,
+          message: exceptionContent.error.message,
+          path: request.url,
+        },
+      };
 
-    response.status(status).json(errorResponse);
+      response.status(status).json(finalErrorResponse);
+    } else {
+      const errorResponse = {
+        success: false,
+        error: {
+          code: status,
+          message: exceptionContent,
+          path: request.url,
+        },
+      };
+
+      response.status(status).json(errorResponse);
+    }
   }
 }
