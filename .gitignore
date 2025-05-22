@@ -77,5 +77,6 @@ lerna-debug.log*
 .yarn-integrity
 
 # docker
+redis_data
 postgres_data
 rabbitmq_data
