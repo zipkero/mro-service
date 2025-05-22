@@ -8,7 +8,7 @@ services:
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -24,14 +24,15 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mro_user -d mro_db"]
+      test: [ "CMD-SHELL", "pg_isready -U mro_user -d mro_db" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: rabbitmq:4.1.0-management
     container_name: mro-rabbitmq
+    user: "0:0" # 루트 유저로 해야 가능, 해결 방법은 확인 필요
     environment:
       RABBITMQ_DEFAULT_USER: mro_user
       RABBITMQ_DEFAULT_PASS: mro_password
@@ -39,9 +40,9 @@ services:
       - "5672:5672" # AMQP 프로토콜
       - "15672:15672" # 관리 UI
     volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_data:/var/lib/rabbitmq:Z
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      test: rabbitmq-diagnostics -q ping
       interval: 10s
       timeout: 5s
       retries: 5
@@ -50,3 +51,4 @@ volumes:
   redis_data:
   postgres_data:
   rabbitmq_data:
+
