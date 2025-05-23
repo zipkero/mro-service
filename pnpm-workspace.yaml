@@ -1,6 +1,7 @@
 packages:
   - mro-api-gateway
   - mro-user
+  - mro-product
   - libs/mro-core
 
 onlyBuiltDependencies:

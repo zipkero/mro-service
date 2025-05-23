@@ -5,8 +5,8 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "start": "pnpm --filter mro-api-gateway --filter mro-user --parallel start",
-    "start:dev": "pnpm --filter mro-api-gateway --filter mro-user --parallel start:dev",
+    "start": "pnpm --filter mro-api-gateway --filter mro-user --filter mro-product --parallel start",
+    "start:dev": "pnpm --filter mro-api-gateway --filter mro-user --filter mro-product --parallel start:dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
