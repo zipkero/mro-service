@@ -54,7 +54,6 @@ export class UserRepository {
   }
 
   async findUser(where: GetUserQuery): Promise<User | null> {
-    throw new HttpException('Not implemented', 501);
     return await this.prisma.user.findFirst({
       where,
     });

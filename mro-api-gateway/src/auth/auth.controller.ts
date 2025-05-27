@@ -10,7 +10,9 @@ import {
 import { AuthService, LoginResponse } from './auth.service';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { TokenPayload } from 'mro-core';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
