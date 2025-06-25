@@ -8,8 +8,8 @@ MRO(Maintenance, Repair, and Operations) 서비스의 REST API 개발 프로젝�
 mro-service/
 ├── mro-api-gateway/      # NestJS - 인증 및 요청 라우팅
 ├── mro-user/             # NestJS - 사용자 관리
-├── mro-product/          # Go - 제품 관리 및 검색
-├── mro-order/            # Go - 주문 처리
+├── mro-product/          # NestJS - 제품 관리 및 검색
+├── mro-order/            # NestJS - 주문 처리
 └── docker-compose.yml    # 개발 환경 설정
 ```
 
