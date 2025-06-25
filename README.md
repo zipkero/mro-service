@@ -8,8 +8,9 @@ MRO(Maintenance, Repair, and Operations) 서비스의 REST API 개발 프로젝�
 mro-service/
 ├── mro-api-gateway/      # NestJS - 인증 및 요청 라우팅
 ├── mro-user/             # NestJS - 사용자 관리
-├── mro-product/          # NestJS - 제품 관리 및 검색
-├── mro-order/            # NestJS - 주문 처리
+├── mro-product/          # NestJS - 제품, 재고
+├── mro-order/            # NestJS - 주문, 배송
+├── mro-payment/          # NestJS - 결제
 └── docker-compose.yml    # 개발 환경 설정
 ```
 
@@ -83,14 +84,14 @@ mro-service/
 - JWT 토큰 발급 및 관리
 - 사용자 권한 관리
 
-### Product Service (Go)
+### Product Service (NestJS)
 
 - 제품 정보 관리
 - 제품 검색 및 필터링
 - 재고 관리
 - 제품 카테고리 관리
 
-### Order Service (Go)
+### Order Service (NestJS)
 
 - 주문 처리 및 관리
 - 결제 연동
@@ -105,12 +106,6 @@ mro-service/
 - DTO를 통한 데이터 검증
 - 서비스 레이어에서 비즈니스 로직
 - 컨트롤러는 라우팅만 담당
-
-### Go 서비스
-
-- 클린 아키텍처 원칙 준수
-- 도메인 주도 설계 (DDD)
-- 인터페이스 기반 의존성 주입
 
 ## API 설계
 

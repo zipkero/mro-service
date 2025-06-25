@@ -1,5 +1,6 @@
 import { Role, User } from '@prisma/client';
 import { GetUserDto, UserRole } from 'mro-core';
+
 export class UserMapper {
   static toPrismaRole = (role: UserRole): Role => {
     return role;

@@ -4,6 +4,9 @@ packages:
   - mro-product
   - libs/mro-core
 
+ignoredBuiltDependencies:
+  - '@scarf/scarf'
+
 onlyBuiltDependencies:
   - '@nestjs/core'
   - '@prisma/client'

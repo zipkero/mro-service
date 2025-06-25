@@ -37,6 +37,9 @@ export class AuthGuard implements CanActivate {
       return false;
     }
     request.user = response.data;
+    request.headers['x-user-id'] = response.data.id;
+    request.headers['x-user-role'] = response.data.role;
+
     return true;
   }
 }

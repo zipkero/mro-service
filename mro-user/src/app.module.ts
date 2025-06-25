@@ -11,7 +11,7 @@ import * as process from 'node:process';
     PrismaModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env${process.env.NODE_ENV == 'production' ? '.prod' : '.development'}`,
+      envFilePath: `.env${process.env.NODE_ENV === 'production' ? '.prod' : '.development'}`,
     }),
     UserModule,
     RedisModule,
