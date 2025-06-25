@@ -18,9 +18,12 @@ mro-service/
 
 ### 회원
 
-- accounts: 시스템에 등록된 개인이나 회사
-- users: 시스템에 로그인하는 실제 사용자(직원, 개인)
-- sellers: 판매 권한과 관련된 추가 정보
+- companies: 회사/조직 정보 (회사명, 사업자번호, 연락처, 주소 등)
+- accounts: 거래 주체 (개인 또는 회사 소속, 실제 구매/판매 계약의 당사자)
+- users: 시스템 로그인 사용자 (Account에 소속된 직원이나 개인)
+- roles: 역할 정의
+- account_roles: Account와 Role의 매핑 테이블 (1:n)
+- user_roles: User와 Role의 매핑 테이블 (1:n)
 
 ### 제품
 
